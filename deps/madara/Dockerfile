@@ -1,7 +1,7 @@
 # Stage 1: Build the application
 FROM rust:1.81 AS builder
 
-ENV MADARA_VER="v0.8.0"
+ENV MADARA_VER="l3-support"
 
 # Install build dependencies
 RUN apt-get -y update && \
