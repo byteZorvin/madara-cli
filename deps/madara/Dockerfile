@@ -1,7 +1,7 @@
 # Stage 1: Build the application
 FROM rust:1.81 AS builder
 
-ENV MADARA_VER="l3-support"
+ENV MADARA_VER="bridge-support"
 
 # Install build dependencies
 RUN apt-get -y update && \
