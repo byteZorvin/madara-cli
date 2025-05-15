@@ -1,7 +1,7 @@
 # Stage 1: Build the application
 FROM rust:1.81 AS builder
 
-ENV MADARA_VER="l3-support"
+ENV MADARA_VER="fix/block-0-handling"
 
 # Install build dependencies
 RUN apt-get -y update && \
@@ -18,18 +18,24 @@ ENV PYENV_ROOT="/root/.pyenv"
 ENV PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
 
 RUN eval "$(pyenv init -)" && \
-    pyenv install 3.9 && \
-    pyenv global 3.9
+  pyenv install 3.9 && \
+  pyenv global 3.9
 
 # Set the working directory
 WORKDIR /usr/src/madara/
 
 
-RUN echo Cloning madara from branch ${MADARA_VER}
+RUN echo Cloning madara with branch ${MADARA_VER}
 RUN git clone --branch ${MADARA_VER} --single-branch https://github.com/madara-alliance/madara . && \
   git submodule update --init --recursive
 
 RUN make snos
+
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository -y ppa:ethereum/ethereum && \
+    apt-get update && \
+    apt-get install -y solc
 
 # Build the application in release mode
 RUN cargo build --release
